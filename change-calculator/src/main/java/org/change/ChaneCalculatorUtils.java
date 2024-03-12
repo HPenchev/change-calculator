@@ -1,22 +1,19 @@
+package org.change;
+
 import java.math.BigDecimal;
 import java.util.*;
 
-public class ChangeCalculator {
+public class ChaneCalculatorUtils {
     private static final SortedSet<Integer> MONEY_NOMINALS_IN_PENNIES =  new TreeSet<>(Collections.reverseOrder());
     static {
         MONEY_NOMINALS_IN_PENNIES.addAll(Arrays.asList(5000, 2000, 1000, 500, 200, 100, 50, 20, 10, 5, 2, 1));
     }
 
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+    public static String getNominalsAsString(Map<Integer, Integer> nominals) {
+        StringBuilder result = new StringBuilder();
 
-        printNominals(getChangeByNominals(new BigDecimal(scanner.nextLine()), new BigDecimal(scanner.nextLine())));
-    }
-
-    private static void printNominals(SortedMap<Integer, Integer> nominals) {
         if(nominals.isEmpty()) {
-            System.out.println("no change");
-            return;
+            result.append("no change");
         }
 
         for (Map.Entry<Integer, Integer> entry : nominals.entrySet()) {
@@ -24,14 +21,18 @@ public class ChangeCalculator {
             int numberOfNominals = entry.getValue();
 
             if (nominal >= 100) {
-                System.out.println(numberOfNominals + " x " + (nominal / 100) + "£");
+                result.append(numberOfNominals + " x " + (nominal / 100) + "£");
             } else { // For pence
-                System.out.println(numberOfNominals + " x " + nominal + "p");
+                result.append(numberOfNominals + " x " + nominal + "p");
             }
+
+            result.append(System.lineSeparator());
         }
+
+        return result.toString().trim();
     }
 
-    private static SortedMap<Integer, Integer> getChangeByNominals(BigDecimal amount, BigDecimal price) {
+    public static SortedMap<Integer, Integer> getChangeByNominals(BigDecimal amount, BigDecimal price) {
         if(amount.compareTo(price) < 0) {
             throw  new IllegalArgumentException("Amount lower than price");
         }
@@ -57,4 +58,5 @@ public class ChangeCalculator {
 
         return result;
     }
+
 }
